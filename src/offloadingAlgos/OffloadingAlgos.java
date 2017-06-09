@@ -5,7 +5,7 @@ import java.util.HashMap;
 import simulation.MobileDevice;
 import simulation.WirelessStation;
 
-public class EfficientMultiUserAlgo {
+public class OffloadingAlgos {
 	
 	private final String channelNum = "channelNum",
 							    bandWidth = "bandWidth",

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Random;
 
-import offloadingAlgos.EfficientMultiUserAlgo;
+import offloadingAlgos.OffloadingAlgos;
 import utils.MsgUtil;
 import utils.TaskUtil;
 
@@ -39,7 +39,7 @@ public class MobileDevice {
 					System.out.println("Mobile Device "+id+" communicates with wireless station on random selected channel "+port);
 					MsgUtil.sendMessage(socket, "getInfo");
 					String wirelessStationInfo = MsgUtil.readMessage(socket);
-					EfficientMultiUserAlgo decisionMaker = new EfficientMultiUserAlgo();
+					OffloadingAlgos decisionMaker = new OffloadingAlgos();
 					decisionMaker.offloadingDecision(curDevice, port);
 					if( port != curDevice.targetPort)
 						System.out.println("***Best port changed***");
