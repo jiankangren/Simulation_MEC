@@ -3,6 +3,7 @@ package simulation;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ public class WirelessStation{
 
 	private static final int channelNum = 5;
 	private static final int bandWidth = 5;
-	private static final float lossFactor = 0.4f;
+	private static final int lossFactor = 1;
 	
 	private static ServerSocket[] channels;
 	private static int[] ports;
@@ -27,7 +28,7 @@ public class WirelessStation{
 		connectionInfo = new HashMap<>();
 		try {
 			for( int i = 0; i < channelNum; ++i)  {
-				channels[i] = new ServerSocket();
+				channels[i] = new ServerSocket(0);
 				ports[i] = channels[i].getLocalPort();
 				connectionInfo.put(ports[i], 0);
 			}
@@ -35,6 +36,10 @@ public class WirelessStation{
 		catch ( IOException e) {
 			e.printStackTrace();
 		}
+		System.out.print("Wireless Station starts to run with "+channelNum+ " channels ");
+		for( int i : ports) 
+			System.out.print(i+" ");
+		System.out.println();
 	}
 	
 	/**
@@ -59,9 +64,17 @@ public class WirelessStation{
 						while(true) {
 							Socket socket = curChannel.accept();
 //							MsgUtil.sendMessage(socket, content);
-							
-							
-							
+							String msg = MsgUtil.readMessage(socket);
+							if( msg.equals("getInfo")) {
+								WirelessInfoThread thread = new WirelessInfoThread(socket, curChannel.getLocalPort());
+								thread.start();
+							}
+							else if( msg.startsWith("offloading ") ) {
+								System.out.println("Wireless station recieves request...");
+								float weight = Float.parseFloat(msg.substring("offloading ".length()));
+								OffloadThread thread = new OffloadThread(weight,socket,curChannel.getLocalPort());
+								thread.start();
+							}
 						}
 					}
 					catch( IOException e ) {
@@ -74,20 +87,28 @@ public class WirelessStation{
 		}
 	}
 
-	public static int getChannelnum() {
-		return channelNum;
+	public static String getWirelessStationInfo() {
+		String res = "channelNum:"+channelNum+" bandWidth:"+bandWidth + 
+				     " lossFactor:"+lossFactor;
+		return res;
 	}
-
-	public static int getBandwidth() {
-		return bandWidth;
+	
+	public static void updateConnectionInfo(boolean increase, int port,int num) {
+		int value = connectionInfo.get(port);
+		if( increase )
+			value += num;
+		else
+			value -= num;
+		connectionInfo.put(port, value);
 	}
-
-	public static float getLossfactor() {
+	
+	public static int getLossFactor() {
 		return lossFactor;
 	}
 	
-	
-	
+	public static int getBandWidth() {
+		return bandWidth;
+	}
 }
 
 class WirelessInfoThread extends Thread{
@@ -102,9 +123,46 @@ class WirelessInfoThread extends Thread{
 	
 	@Override
 	public void run() {
-		int key = WirelessStation.getConnectionInfo().get(port);
-		int value = WirelessStation.getConnectionInfo().get(key);
-		WirelessStation.getConnectionInfo().put(key, value + 1);
-		MsgUtil.sendMessage(socket, "ChannelNum:"+WirelessStation.getChannelnum());
+		WirelessStation.updateConnectionInfo(true, port, 1);
+		try {
+			MsgUtil.sendMessage(socket, WirelessStation.getWirelessStationInfo());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+class OffloadThread extends Thread {
+	
+	private Socket stationToCloud;
+	private Socket userToStation;
+	private float weight;
+	private int port;
+	
+	public OffloadThread(float weight, Socket userToStation, int port) throws UnknownHostException, IOException {
+		this.weight = weight;
+		stationToCloud = new Socket("127.0.0.1",CloudServer.getPort());
+		this.userToStation = userToStation;
+		this.port = port;
+	}
+	
+	@Override
+	public void run() {
+		try {
+			
+			MsgUtil.sendMessage(stationToCloud, "offloading "+weight);
+			System.out.println("WirelessStation offload task to cloud");
+			String msg = MsgUtil.readMessage(stationToCloud);
+			if( msg.startsWith("FINISH ")) {
+				MsgUtil.sendMessage(userToStation, msg);
+			}
+			stationToCloud.close();
+			WirelessStation.updateConnectionInfo(false, port, 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

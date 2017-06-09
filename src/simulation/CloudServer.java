@@ -14,12 +14,13 @@ public class CloudServer extends Thread{
 	
 	public CloudServer() {
 		try {
-			this.server = new ServerSocket();
+			this.server = new ServerSocket(0);
 			this.port = server.getLocalPort();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Cloud Server starts to run....");
 	}
 	
 	public static int getPort() {
@@ -34,7 +35,7 @@ public class CloudServer extends Thread{
 		while( true ) {
 			try {
 				Socket socket = server.accept();
-				this.handleRequest(socket);
+				handleRequest(socket);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -48,15 +49,18 @@ public class CloudServer extends Thread{
 			@Override
 			public void run() {
 				try{
+					System.out.println("Cloud server starts computing");
+					long startTime = System.currentTimeMillis();
 					String msg = MsgUtil.readMessage(socket);
 					float weight = Float.parseFloat(msg.split(" ")[1]);
-					TaskUtil.getInstance().runTaskOnServer(weight);
-					MsgUtil.sendMessage(socket, "FINISH");
+					long timeSpan = TaskUtil.getInstance().runTaskOnServer(weight);
+					MsgUtil.sendMessage(socket, "FINISH "+timeSpan);
 				} catch( IOException e) {
 					e.printStackTrace();
 				}
 			}
 		};
+		thread.start();
 	}
 	
 

@@ -3,6 +3,7 @@ package simulation;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class Entrance extends Thread{
 	
@@ -21,8 +22,14 @@ public class Entrance extends Thread{
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		Entrance obj = new Entrance();
-		obj.test();
+		WirelessStation wirelessStation = new WirelessStation();
+		wirelessStation.start();
+		CloudServer cloudServer = new CloudServer();
+		cloudServer.start();
+		for( int i = 1; i <=15; ++i) {
+			MobileDevice device = new MobileDevice(i,new Random().nextInt(100));
+			device.compute();
+		}
 	}
 
 }
