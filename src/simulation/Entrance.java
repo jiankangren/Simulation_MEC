@@ -26,9 +26,11 @@ public class Entrance extends Thread{
 		wirelessStation.start();
 		CloudServer cloudServer = new CloudServer();
 		cloudServer.start();
-		for( int i = 1; i <=15; ++i) {
-			MobileDevice device = new MobileDevice(i,new Random().nextInt(100), new Random().nextInt(5) + 1);
-			device.compute();
+		for( int i = 1; i <= 15; ++i) {
+			int battery = new Random().nextInt(100),
+				dataSize = new Random().nextInt(5) +1 ;
+			MobileDevice device = new MobileDevice(i,battery,dataSize);
+			device.computeByMEC();
 		}
 	}
 

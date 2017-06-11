@@ -1,15 +1,11 @@
 package utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.sun.jmx.snmp.Timestamp;
-
 import simulation.MobileDevice;
 import simulation.WirelessStation;
 
@@ -72,7 +68,7 @@ public class TaskUtil extends Thread{
 					}
 					writer.close();
 					long endTime = System.currentTimeMillis();
-					device.setTransferTimeSpan( (device.getDataSize() * 10) / WirelessStation.getBandWidth());		
+					device.setTransferTimeSpan( (device.getDataSize() ) / WirelessStation.getBandWidth());		
 					device.setLocalTimeSpan( (endTime - startTime) / 1000);
 					device.setHasLocalFinished();
 				} catch( IOException  e) {

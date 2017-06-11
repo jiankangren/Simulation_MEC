@@ -1,9 +1,26 @@
+-----------------------------MEC---------------------------------
+At the beginning, Device 9 has 21% of battery life and 28GB data to be transferred.
 Device 9 has finished its task.
 0.8 percentage of task has completed on cloud
-0.19999999 percentage of task has completed locally
-The transfer of data costs 10 seconds
-The transfer of data uses 2% of total battery life
-The transfer and local computation consumes 5% of total battery life
+0.2 percentage of task has completed locally
+The transfer of data costs 5 seconds
+The transfer of data uses 1% of total battery life
+The transfer and local computation consumes 3% of total battery life
 The task computes on the cloud uses 5 seconds
 The task computes locally uses 5 seconds
-Cloud computing helps reduce 15 seconds and 10% of total battery life
+Cloud computing helps reduce 20 seconds and 12% of total battery life
+At the end, Device 9 has 18% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------Dynamic---------------------------------
+At the beginning, Device 9 has 21% of battery life and 28GB data to be transferred.
+Device 9 has finished its task.
+1.0 percentage of task has completed on cloud
+0.0 percentage of task has completed locally
+The transfer of data costs 10 seconds
+The transfer of data uses 3% of total battery life
+The transfer and local computation consumes 3% of total battery life
+The task computes on the cloud uses 6 seconds
+The task computes locally uses 0 seconds
+Cloud computing helps reduce 14 seconds and 12% of total battery life
+At the end, Device 9 has 18% of battery life remained
+--------------------------------------------------------------------------------

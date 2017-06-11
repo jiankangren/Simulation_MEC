@@ -1,46 +1,73 @@
 package offloadingAlgos;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
 
 import simulation.MobileDevice;
 import simulation.WirelessStation;
 
 public class OffloadingAlgos {
 
-	private final String channelNum = "channelNum",
-			bandWidth = "bandWidth",
-			lossFactor = "lossFactor";
-
+	// matrix contains -1: not initialzied; 0: offloading; 1: offload
+	private static List<Integer> matrix; 
+	
+	static{
+		matrix = Collections.synchronizedList(new ArrayList<Integer>());
+	}
+	
 	public void offloadingDecisionByMEC(MobileDevice device, int port) {
 		//		HashMap<String,Integer> stationInfo = getWirelessStationInfo(content);
-		Hashtable<Integer,Integer> connectionInfo = WirelessStation.getConnectionInfo();
-		int bestPort = calculateOverhead(connectionInfo, port, device);
+		int bestPort = calculateOverheadForMEC(port, device);
 		device.setTargetPort(bestPort);
 		setOffloadingWeight(device);
 	}
 
-	public void offloadDecisionByDynamic(MobileDevice[] devices) {
-		StringBuilder decisions = new StringBuilder();
-	}
-
-	public  HashMap<String,Integer> getWirelessStationInfo(String content) {
-		HashMap<String,Integer> res = new HashMap<>();
-		String[] info = content.split(" ");
-		for( String str : info) {
-			if( str.startsWith(channelNum)) 
-				res.put(channelNum, Integer.parseInt(str.split(":")[1]));
-			else if( str.startsWith(bandWidth)) 
-				res.put(bandWidth, Integer.parseInt(str.split(":")[1]));
-			else if( str.startsWith(lossFactor)) 
-				res.put(lossFactor, Integer.parseInt(str.split(":")[1]));
+	public void offloadingDecisionByDynamic(MobileDevice device) {
+		Random rand = new Random();
+		if( device.getId() >= matrix.size() ) {
+			for( int i = matrix.size(); i <= device.getId(); ++i) {
+				matrix.add(-1);
+			}
 		}
-
-		return res;
+		if( matrix.get(device.getId()) == -1) {
+			matrix.set(device.getId(), rand.nextInt(2));
+		}
+		if( matrix.get(device.getId()) == 0 && !isBeneficial(device) ) {
+			device.setOffloadWeight(0);
+		}
 	}
 
-
-
+	public boolean isBeneficial(MobileDevice device) {
+		Hashtable<Integer,Integer> connectionInfo = WirelessStation.getConnectionInfo();
+		double localTimeOverhead = device.getCompletelyLocalySpan();
+		double localEnergyOverhead = localTimeOverhead/2;
+		double minCloudOverhead = Double.MAX_VALUE;
+		int transferTimeSpan = -1;
+		int bestPort = -1;
+		for( int port : WirelessStation.getPorts()) {
+			int lossFactor = connectionInfo.get(port) * 2;
+			double curOverhead = 6 
+					+  ( (double) device.getDataSize() / (double)WirelessStation.getBandWidth()) * lossFactor
+					+  ( (double) device.getDataSize() / (double)WirelessStation.getBandWidth()) / 3;
+			if( curOverhead < minCloudOverhead) {
+				minCloudOverhead = curOverhead;
+				transferTimeSpan = device.getDataSize() / WirelessStation.getBandWidth() * lossFactor;
+				bestPort = port;
+			}
+		}
+		if( minCloudOverhead < (localTimeOverhead + localEnergyOverhead)) {
+			device.setTargetPort(bestPort);
+			device.setCloudTimeSpan(6);
+			device.setTransferTimeSpan(transferTimeSpan ) ;
+			device.setOffloadWeight(1);
+			return true;
+		}
+		return false;
+	} 
+	
 	/***
 	 * 
 	 * @param connectionInfo
@@ -48,7 +75,7 @@ public class OffloadingAlgos {
 	 * @param device
 	 * @return
 	 */
-	public int calculateOverhead(Hashtable<Integer,Integer> connectionInfo, int port, MobileDevice device) {
+	public int calculateOverheadForMEC(int port, MobileDevice device) {
 		int currentChannelConnectionNum = WirelessStation.getConnectionInfo().get(port);
 		int lossFactor = WirelessStation.getLossFactor();
 		int bandWidth = WirelessStation.getBandWidth();
@@ -90,13 +117,7 @@ public class OffloadingAlgos {
 	
 	public void setOffloadingWeight(MobileDevice device) {
 
-		if( device.getBattery() < 20)
-			device.setOffloadWeight(0.9f);
-		else {
-			device.setOffloadWeight( 100 - device.getBattery());
-		}
-
-		if( device.getBattery() > 80)
+		if( device.getBattery() > 80) 
 			device.setOffloadWeight(0.5f);
 		else if( device.getBattery() > 60 && device.getBattery() <= 80) 
 			device.setOffloadWeight(0.6f);

@@ -1,9 +1,26 @@
+-----------------------------MEC---------------------------------
+At the beginning, Device 13 has 33% of battery life and 29GB data to be transferred.
 Device 13 has finished its task.
-0.6 percentage of task has completed on cloud
-0.39999998 percentage of task has completed locally
-The transfer of data costs 8 seconds
-The transfer of data uses 5% of total battery life
-The transfer and local computation consumes 7% of total battery life
-The task computes on the cloud uses 3 seconds
-The task computes locally uses 11 seconds
-Cloud computing helps reduce 19 seconds and 8% of total battery life
+0.8 percentage of task has completed on cloud
+0.2 percentage of task has completed locally
+The transfer of data costs 5 seconds
+The transfer of data uses 1% of total battery life
+The transfer and local computation consumes 3% of total battery life
+The task computes on the cloud uses 5 seconds
+The task computes locally uses 5 seconds
+Cloud computing helps reduce 20 seconds and 12% of total battery life
+At the end, Device 13 has 30% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------Dynamic---------------------------------
+At the beginning, Device 13 has 33% of battery life and 29GB data to be transferred.
+Device 13 has finished its task.
+1.0 percentage of task has completed on cloud
+0.0 percentage of task has completed locally
+The transfer of data costs 20 seconds
+The transfer of data uses 6% of total battery life
+The transfer and local computation consumes 6% of total battery life
+The task computes on the cloud uses 6 seconds
+The task computes locally uses 0 seconds
+Cloud computing helps reduce 4 seconds and 9% of total battery life
+At the end, Device 13 has 27% of battery life remained
+--------------------------------------------------------------------------------

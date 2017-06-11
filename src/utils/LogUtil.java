@@ -25,7 +25,7 @@ public class LogUtil {
 				try {
 					File logFile = new File(filePath+device.getId()+".txt");
 					logFile.createNewFile();
-					FileWriter writer = new FileWriter(logFile);
+					FileWriter writer = new FileWriter(logFile,true);
 					writer.write(content);
 					writer.close();
 				} catch (IOException e) {
