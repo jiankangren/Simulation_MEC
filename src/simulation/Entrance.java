@@ -27,7 +27,7 @@ public class Entrance extends Thread{
 		CloudServer cloudServer = new CloudServer();
 		cloudServer.start();
 		for( int i = 1; i <=15; ++i) {
-			MobileDevice device = new MobileDevice(i,new Random().nextInt(100));
+			MobileDevice device = new MobileDevice(i,new Random().nextInt(100), new Random().nextInt(5) + 1);
 			device.compute();
 		}
 	}

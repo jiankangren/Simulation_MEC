@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.Random;
 
 import offloadingAlgos.OffloadingAlgos;
+import utils.LogUtil;
 import utils.MsgUtil;
 import utils.TaskUtil;
 
@@ -15,15 +16,19 @@ public class MobileDevice {
 	private long battery ;
 	private long cloudTimeSpan;
 	private long localTimeSpan;
+	private int transferTimeSpan;
 	private long completelyLocalySpan = 30;
 	private int targetPort;
+	private int dataSize;
 	private boolean hasCloudFinished = false;
 	private boolean hasLocalFinished = false;
 	
-	public MobileDevice(int id, int battery) {
+	public MobileDevice(int id, int battery, int dataSize) {
 		this.id = id;
-		System.out.println("Mobile Device created:"+id);
 		this.battery = battery;
+		this.dataSize = dataSize;
+		transferTimeSpan = new Random().nextInt(10) + 1 ;
+		System.out.println("Mobile Device created:"+id +" with "+dataSize + "0GB data and "+battery+"% battery life" );
 	}
 	
 	public void compute() throws IOException{
@@ -36,17 +41,21 @@ public class MobileDevice {
 					System.out.println("Mobile device " +id+ " starts to run...");
 					int port = getRandomPort();
 					Socket socket = new Socket("127.0.0.1", port);
+					WirelessStation.updateConnectionInfo(true, port, 1);
 					System.out.println("Mobile Device "+id+" communicates with wireless station on random selected channel "+port);
 					MsgUtil.sendMessage(socket, "getInfo");
-					String wirelessStationInfo = MsgUtil.readMessage(socket);
+//					String wirelessStationInfo = MsgUtil.readMessage(socket);
 					OffloadingAlgos decisionMaker = new OffloadingAlgos();
-					decisionMaker.offloadingDecision(curDevice, port);
-					if( port != curDevice.targetPort)
-						System.out.println("***Best port changed***");
+					decisionMaker.offloadingDecisionByMEC(curDevice, port);
+					if( port != curDevice.targetPort) {
+						System.out.println("**********************Best port changed on device +"+ id +"***");
+						WirelessStation.updateConnectionInfo(false, port, 1);
+						WirelessStation.updateConnectionInfo(true, curDevice.targetPort, 1);
+					}
 					// start cloud computing and locally computing at the same time
 					socket.close();
-					socket = new Socket("127.0.0.1", targetPort);
-					System.out.println("Device "+id+" decides to connect to channel "+targetPort+" which provides best performance");
+					socket = new Socket("127.0.0.1", curDevice.targetPort);
+					System.out.println("Device "+id+" decides to connect to channel "+curDevice.targetPort+" which provides best performance");
 					MsgUtil.sendMessage(socket, "offloading "+offloadWeight);
 					System.out.println("Device "+id+" offloads "+offloadWeight +" of its total task to cloud");
 					TaskUtil.getInstance().runTaskOnMobileDevice( (10 - offloadWeight*10)/10, curDevice);
@@ -62,7 +71,9 @@ public class MobileDevice {
 						this.sleep(3000);
 //						System.out.println("ew111");
 					}
-					updateBattery();
+					WirelessStation.updateConnectionInfo(false, curDevice.targetPort, 1);
+					String content = updateBattery();
+					LogUtil.log(curDevice, content);
 				} catch( IOException | InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -75,18 +86,34 @@ public class MobileDevice {
 	
 	
 	
-	public void updateBattery() {
+	public String updateBattery() {
+		String res = "";
 		long usedBattery = localTimeSpan / 2;
+		usedBattery += (transferTimeSpan/3) == 0 ? 1 : (transferTimeSpan/3);
 		battery = battery - usedBattery;
+		
 		System.out.println("------------------------------------");
 		System.out.println("Device "+id+" has finished its task.");
+		res += "Device "+id+" has finished its task.\n";
 		System.out.println(offloadWeight + " percentage of task has completed on cloud");
-		System.out.println((1 - offloadWeight) + " percentage of task has completed locally");
-		System.out.println("The task consumes "+ usedBattery + "% of total battery life");
+		res += offloadWeight + " percentage of task has completed on cloud\n";
+		System.out.println((10 - offloadWeight*10)/10+ " percentage of task has completed locally");
+		res += (1 - offloadWeight) + " percentage of task has completed locally\n";
+		System.out.println("The transfer of data costs " + transferTimeSpan  + " seconds" );
+		res += "The transfer of data costs " + transferTimeSpan  + " seconds\n";
+		System.out.println("The transfer of data uses " + (usedBattery - transferTimeSpan/3)  +"% of total battery life");
+		res += "The transfer of data uses " + (usedBattery - transferTimeSpan/3)  +"% of total battery life\n";
+		System.out.println("The transfer and local computation consumes "+  usedBattery + "% of total battery life");
+		res += "The transfer and local computation consumes "+  usedBattery + "% of total battery life\n";
 		System.out.println("The task computes on the cloud uses "+cloudTimeSpan + " seconds");
+		res += "The task computes on the cloud uses "+cloudTimeSpan + " seconds\n";
 		System.out.println("The task computes locally uses "+localTimeSpan + " seconds");
+		res += "The task computes locally uses "+localTimeSpan + " seconds\n";
 		System.out.println("Cloud computing helps reduce " + 
-				(completelyLocalySpan - Math.max(localTimeSpan, cloudTimeSpan)) +" seconds");
+				(completelyLocalySpan - Math.max(localTimeSpan, cloudTimeSpan+transferTimeSpan)) +" seconds and " + (completelyLocalySpan/2 - usedBattery) +"% of total battery life" );
+		res += "Cloud computing helps reduce " + 
+				(completelyLocalySpan - Math.max(localTimeSpan, cloudTimeSpan+transferTimeSpan)) +" seconds and " + (completelyLocalySpan/2 - usedBattery) +"% of total battery life\n";
+		return res;
 	}
 
 	public int getRandomPort() {
@@ -150,5 +177,24 @@ public class MobileDevice {
 	public void setHasLocalFinished() {
 		this.hasLocalFinished = true;
 	}
+
+	public int getDataSize() {
+		return dataSize;
+	}
+
+	public void setDataSize(int dataSize) {
+		this.dataSize = dataSize;
+	}
+
+	public int getTransferTimeSpan() {
+		return transferTimeSpan;
+	}
+
+	public void setTransferTimeSpan(int transferTimeSpan) {
+		this.transferTimeSpan = transferTimeSpan;
+	}
+
+	
+
 
 }

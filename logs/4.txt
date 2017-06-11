@@ -1,0 +1,9 @@
+Device 4 has finished its task.
+0.8 percentage of task has completed on cloud
+0.19999999 percentage of task has completed locally
+The transfer of data costs 4 seconds
+The transfer of data uses 2% of total battery life
+The transfer and local computation consumes 3% of total battery life
+The task computes on the cloud uses 5 seconds
+The task computes locally uses 5 seconds
+Cloud computing helps reduce 21 seconds and 12% of total battery life

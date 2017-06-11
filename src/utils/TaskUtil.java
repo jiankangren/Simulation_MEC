@@ -11,8 +11,9 @@ import java.util.List;
 import com.sun.jmx.snmp.Timestamp;
 
 import simulation.MobileDevice;
+import simulation.WirelessStation;
 
-public class TaskUtil {
+public class TaskUtil extends Thread{
 	
 	private String filePath;
 	private static List<Integer> list;
@@ -30,21 +31,24 @@ public class TaskUtil {
 	}
 	
 
-	public long runTaskOnServer(float weight) {
-		long timeSpan = 0, startingTime = 0, endTime = 0;
+	public long runTaskOnServer(float weight)  {
+		long startingTime = 0, endTime = 0;
 		try {
 			startingTime = System.currentTimeMillis();
 			int curTask = (int) (content * weight);
 			int nxtFile = list.get(list.size()-1) + 1;
 			list.add(nxtFile);
 			File file = new File(filePath + nxtFile);
+			if( !file.exists())
+				file.createNewFile();
 			FileWriter writer = new FileWriter(file);
 			for( int i = 0; i < curTask; ++i) {
+				this.sleep(1);
 				writer.write(i);
 			}
 			writer.close();
 			endTime = System.currentTimeMillis();
-		} catch( IOException e) {
+		} catch( IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 		return ( endTime - startingTime ) / 1000;
@@ -55,12 +59,12 @@ public class TaskUtil {
 			@Override
 			public void run() {
 				try {
-					System.out.println("Device "+ device.getId()+" computes +"+weight+" of total task locally");
+					System.out.println("Device "+ device.getId()+" computes "+ weight+" of total task locally");
 					long startTime = System.currentTimeMillis();
 					int curTask = (int) (content * weight);
-					int nxtFile = list.get(list.size()-1) + 1;
-					list.add(nxtFile);
-					File file = new File(filePath+nxtFile);
+					File file = new File(filePath+device.getId());
+					if( !file.exists())
+						file.createNewFile();
 					FileWriter writer = new FileWriter(file);
 					for( int i = 0; i < curTask; ++i) {
 						this.sleep(5);
@@ -68,6 +72,7 @@ public class TaskUtil {
 					}
 					writer.close();
 					long endTime = System.currentTimeMillis();
+					device.setTransferTimeSpan( (device.getDataSize() * 10) / WirelessStation.getBandWidth());		
 					device.setLocalTimeSpan( (endTime - startTime) / 1000);
 					device.setHasLocalFinished();
 				} catch( IOException  e) {

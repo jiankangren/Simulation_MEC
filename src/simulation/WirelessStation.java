@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 import utils.MsgUtil;
 
@@ -13,11 +14,11 @@ public class WirelessStation{
 
 	private static final int channelNum = 5;
 	private static final int bandWidth = 5;
-	private static final int lossFactor = 1;
+	private static final int lossFactor = 2;
 	
 	private static ServerSocket[] channels;
 	private static int[] ports;
-	private static HashMap<Integer,Integer> connectionInfo;
+	private static Hashtable<Integer,Integer> connectionInfo;
 	
 	/**
 	 * Initialize channels 
@@ -25,7 +26,7 @@ public class WirelessStation{
 	public WirelessStation() {
 		channels = new ServerSocket[channelNum];
 		ports = new int[channels.length];
-		connectionInfo = new HashMap<>();
+		connectionInfo = new Hashtable<>();
 		try {
 			for( int i = 0; i < channelNum; ++i)  {
 				channels[i] = new ServerSocket(0);
@@ -50,7 +51,7 @@ public class WirelessStation{
 		return Arrays.copyOfRange(ports, 0, ports.length);
 	}
 	
-	public static HashMap<Integer,Integer> getConnectionInfo() {
+	public static Hashtable<Integer,Integer> getConnectionInfo() {
 		return connectionInfo;
 	}
 	
@@ -100,6 +101,10 @@ public class WirelessStation{
 		else
 			value -= num;
 		connectionInfo.put(port, value);
+//		for( int p : connectionInfo.keySet()) {
+//			System.out.println("port "+p +" has "+connectionInfo.get(p)+" connections");
+//		}
+		
 	}
 	
 	public static int getLossFactor() {
@@ -123,7 +128,7 @@ class WirelessInfoThread extends Thread{
 	
 	@Override
 	public void run() {
-		WirelessStation.updateConnectionInfo(true, port, 1);
+//		WirelessStation.updateConnectionInfo(true, port, 1);
 		try {
 			MsgUtil.sendMessage(socket, WirelessStation.getWirelessStationInfo());
 		} catch (IOException e) {
@@ -158,7 +163,7 @@ class OffloadThread extends Thread {
 				MsgUtil.sendMessage(userToStation, msg);
 			}
 			stationToCloud.close();
-			WirelessStation.updateConnectionInfo(false, port, 1);
+//			WirelessStation.updateConnectionInfo(false, port, 1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
