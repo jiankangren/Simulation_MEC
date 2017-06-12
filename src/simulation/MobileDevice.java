@@ -28,7 +28,8 @@ public class MobileDevice {
 		this.id = id;
 		this.battery = battery;
 		this.originalBattery = battery;
-		this.dataSize = dataSize * 10 + new Random().nextInt(10);
+//		this.dataSize = dataSize * 10 + new Random().nextInt(10);
+		this.dataSize = dataSize;
 		transferTimeSpan = new Random().nextInt(10) + 1 ;
 		System.out.println("Mobile Device created:"+id +" with "+ this.dataSize + "GB data and "+battery+"% battery life" );
 	}
@@ -172,6 +173,7 @@ public class MobileDevice {
 		res += "Cloud computing helps reduce " + 
 				(completelyLocalySpan - Math.max(localTimeSpan, cloudTimeSpan+transferTimeSpan)) +" seconds and " + (completelyLocalySpan/2 - usedBattery) +"% of total battery life\n";
 		res += "At the end, Device "+id +" has "+battery +"% of battery life remained\n";
+		System.out.println("--------------------------------------------------------------------------------\n");
 		res += "--------------------------------------------------------------------------------\n";
 		return res;
 	}

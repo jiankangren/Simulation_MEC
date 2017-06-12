@@ -1,0 +1,13 @@
+-----------------------------MEC---------------------------------
+At the beginning, Device 28 has 61% of battery life and 51GB data to be transferred.
+Device 28 has finished its task.
+0.6 percentage of task has completed on cloud
+0.4 percentage of task has completed locally
+The transfer of data costs 10 seconds
+The transfer of data uses 3% of total battery life
+The transfer and local computation consumes 8% of total battery life
+The task computes on the cloud uses 3 seconds
+The task computes locally uses 11 seconds
+Cloud computing helps reduce 17 seconds and 7% of total battery life
+At the end, Device 28 has 53% of battery life remained
+--------------------------------------------------------------------------------

@@ -1,0 +1,39 @@
+-----------------------------MEC---------------------------------
+At the beginning, Device 22 has 4% of battery life and 40GB data to be transferred.
+Device 22 has finished its task.
+0.9 percentage of task has completed on cloud
+0.1 percentage of task has completed locally
+The transfer of data costs 8 seconds
+The transfer of data uses 2% of total battery life
+The transfer and local computation consumes 3% of total battery life
+The task computes on the cloud uses 5 seconds
+The task computes locally uses 2 seconds
+Cloud computing helps reduce 17 seconds and 12% of total battery life
+At the end, Device 22 has 1% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------MEC---------------------------------
+At the beginning, Device 22 has 75% of battery life and 30GB data to be transferred.
+Device 22 has finished its task.
+0.6 percentage of task has completed on cloud
+0.4 percentage of task has completed locally
+The transfer of data costs 6 seconds
+The transfer of data uses 2% of total battery life
+The transfer and local computation consumes 7% of total battery life
+The task computes on the cloud uses 4 seconds
+The task computes locally uses 11 seconds
+Cloud computing helps reduce 19 seconds and 8% of total battery life
+At the end, Device 22 has 68% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------Dynamic---------------------------------
+At the beginning, Device 22 has 75% of battery life and 30GB data to be transferred.
+Device 22 has finished its task.
+1.0 percentage of task has completed on cloud
+0.0 percentage of task has completed locally
+The transfer of data costs 36 seconds
+The transfer of data uses 12% of total battery life
+The transfer and local computation consumes 12% of total battery life
+The task computes on the cloud uses 6 seconds
+The task computes locally uses 0 seconds
+Cloud computing helps reduce -12 seconds and 3% of total battery life
+At the end, Device 22 has 63% of battery life remained
+--------------------------------------------------------------------------------
