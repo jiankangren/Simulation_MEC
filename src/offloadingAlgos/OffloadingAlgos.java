@@ -116,7 +116,6 @@ public class OffloadingAlgos {
 	}
 	
 	public void setOffloadingWeight(MobileDevice device) {
-
 		if( device.getBattery() > 80) 
 			device.setOffloadWeight(0.5f);
 		else if( device.getBattery() > 60 && device.getBattery() <= 80) 

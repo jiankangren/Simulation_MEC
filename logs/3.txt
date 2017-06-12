@@ -141,3 +141,42 @@ The task computes locally uses 11 seconds
 Cloud computing helps reduce 19 seconds and 8% of total battery life
 At the end, Device 3 has 68% of battery life remained
 --------------------------------------------------------------------------------
+-----------------------------MEC---------------------------------
+At the beginning, Device 3 has 76% of battery life and 11MB data to be transferred.
+Device 3 has finished its task.
+0.6 percentage of task has completed on cloud
+0.4 percentage of task has completed locally
+The transfer of data costs 2 seconds
+The transfer of data uses 1% of total battery life
+The transfer and local computation consumes 6% of total battery life
+The task computes on the cloud uses 4 seconds
+The task computes locally uses 11 seconds
+Cloud computing helps reduce 19 seconds and 9% of total battery life
+At the end, Device 3 has 70% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------Dynamic---------------------------------
+At the beginning, Device 3 has 76% of battery life and 11MB data to be transferred.
+Device 3 has finished its task.
+1.0 percentage of task has completed on cloud
+0.0 percentage of task has completed locally
+The transfer of data costs 0 seconds
+The transfer of data uses 1% of total battery life
+The transfer and local computation consumes 1% of total battery life
+The task computes on the cloud uses 6 seconds
+The task computes locally uses 0 seconds
+Cloud computing helps reduce 24 seconds and 14% of total battery life
+At the end, Device 3 has 75% of battery life remained
+--------------------------------------------------------------------------------
+-----------------------------MEC---------------------------------
+At the beginning, Device 3 has 3% of battery life and 47MB data to be transferred.
+Device 3 has finished its task.
+0.9 percentage of task has completed on cloud
+0.1 percentage of task has completed locally
+The transfer of data costs 9 seconds
+The transfer of data uses 3% of total battery life
+The transfer and local computation consumes 4% of total battery life
+The task computes on the cloud uses 5 seconds
+The task computes locally uses 2 seconds
+Cloud computing helps reduce 16 seconds and 11% of total battery life
+At the end, Device 3 has -1% of battery life remained
+--------------------------------------------------------------------------------

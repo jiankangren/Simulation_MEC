@@ -28,10 +28,10 @@ public class MobileDevice {
 		this.id = id;
 		this.battery = battery;
 		this.originalBattery = battery;
-//		this.dataSize = dataSize * 10 + new Random().nextInt(10);
-		this.dataSize = dataSize;
+		this.dataSize = dataSize * 10 + new Random().nextInt(10);
+//		this.dataSize = dataSize;
 		transferTimeSpan = new Random().nextInt(10) + 1 ;
-		System.out.println("Mobile Device created:"+id +" with "+ this.dataSize + "GB data and "+battery+"% battery life" );
+		System.out.println("Mobile Device "+id +" created with "+ this.dataSize + "MB data and "+battery+"% battery life" );
 	}
 	
 	public void computeByMEC() throws IOException{
@@ -151,7 +151,7 @@ public class MobileDevice {
 		battery = battery - usedBattery;
 		System.out.println("------------------------"+offloadingType+"----------------------------------");
 		res += "-----------------------------"+offloadingType+"---------------------------------\n";
-		res += "At the beginning, Device "+id+" has "+ originalBattery +"% of battery life and "+dataSize+"GB data to be transferred.\n";
+		res += "At the beginning, Device "+id+" has "+ originalBattery +"% of battery life and "+dataSize+"MB data to be transferred.\n";
 		System.out.println("Device "+id+" has finished its task.");
 		res += "Device "+id+" has finished its task.\n";
 		System.out.println(offloadWeight + " percentage of task has completed on cloud");
